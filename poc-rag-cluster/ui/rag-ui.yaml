@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-rag-ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis-rag-ui
+  template:
+    metadata:
+      labels:
+        app: redis-rag-ui
+    spec:
+      containers:
+        - name: ui
+          image: redis-rag-ui:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8501
+          env:
+            - name: API_URL
+              value: "http://redis-rag-api:8000/ask"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-rag-ui
+spec:
+  type: NodePort
+  selector:
+    app: redis-rag-ui
+  ports:
+    - port: 8501
+      targetPort: 8501
+      nodePort: 30008
