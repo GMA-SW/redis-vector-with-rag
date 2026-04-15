@@ -3,6 +3,10 @@ layout: default
 title: Accueil
 ---
 
-# Hello 👋
+# Proof of Concept for high volumetry with Redis Vector associated to RAG
 
-Ceci est mon site en Markdown !
+## Environment setup
+- [Cluster K8S](kubernetes.md)
+- [Redis Vector Database](redis.md)
+
+## Guidelines
