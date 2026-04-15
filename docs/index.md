@@ -7,6 +7,7 @@ title: Accueil
 
 ## Environment setup
 - [Cluster K8S](kubernetes.md)
+- [Environnement python](python.md)
 - [Redis Vector Database](redis.md)
 - [Optimizations & Performance](optimizations.md)
 - [Limitations & Améliorations](limitations.md)

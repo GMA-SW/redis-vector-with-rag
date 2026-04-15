@@ -3,7 +3,7 @@ layout: default
 title: Optimisations et performance
 ---
 
-# Optimisations et choix techniques – Redis Vector + RAG
+# Optimisations et choix techniques
 
 ## 1. Vector Search avec Redis
 
@@ -20,7 +20,7 @@ Utilisation de Redis comme base de données vectorielle pour effectuer du **sema
 ```
 - Distance utilisée : COSINE
 
-### Pourquoi
+### Pros
 - Permet de retrouver des documents même si les mots ne matchent pas exactement
     - Exemple : "assurance vie" ≈ "contrat épargne long terme"
 - Base du RAG → compréhension sémantique
@@ -50,7 +50,7 @@ EF_CONSTRUCTION 200
 - Chaque vecteur est connecté à ses voisins proches
 - Recherche = navigation dans le graphe (pas scan complet)
 
-### Pourquoi
+### Pros
 - Complexité quasi logarithmique
 - Très rapide comparé à un scan brut
 - Supporte très bien les gros volumes (>1M vecteurs)
@@ -86,7 +86,7 @@ EF_CONSTRUCTION 200
         - ↑ précision
         - ↑ latence
 
-### Pourquoi
+### Pros
 Permet de contrôler le trade-off :
 - Latence vs précision
 - Mémoire vs qualité
@@ -110,7 +110,7 @@ Combinaison de :
 - @contract_types:{assurance_vie} → filtre exact
 - KNN → tri par similarité sémantique
 
-### Pourquoi
+### Pros
 - Vector seul :
     - trop de bruit
     - résultats hors sujet

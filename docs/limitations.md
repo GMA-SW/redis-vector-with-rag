@@ -17,6 +17,7 @@ title: Limitations et améliorations
 - Certaines requêtes ≠ RAG
 - Ex : "liste complète"
 
+---
 
 ## Améliorations possibles
 

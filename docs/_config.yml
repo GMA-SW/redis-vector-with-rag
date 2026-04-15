@@ -3,5 +3,7 @@ theme: minima
 header_pages:
   - index.md
   - kubernetes.md
+  - python.md
   - redis.md
   - optimizations.md
+  - limitations.md

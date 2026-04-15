@@ -2,6 +2,7 @@
 layout: default
 title: Cluster K8S
 ---
+
 ## ⚙️ Kubernetes Setup
 
 **Note** : Les commandes qui vont suivre sont à exécuter dans le dossier **poc-rag-cluster**. Il faudra parfois se déplacer dans les dossiers si nécessaires.
@@ -12,6 +13,8 @@ Afin d'accéder aux logs des pods vous pouvez faire la commande suivante en ayan
 ```bash
 sudo kubectl logs nom-pod
 ```
+
+---
 
 ### Redis Stack
 #### Deployment
@@ -26,6 +29,8 @@ sudo kubectl get pods
 
 On doit trouver un service **redis-stack** et les pods associés en running.
 
+---
+
 ### Agent IA
 #### Deployment
 ```bash
@@ -38,6 +43,8 @@ sudo kubectl get pods
 ```
 
 On doit trouver un service **ollama** et le pods **ollama** en running ainsi que le job **ollama-pull-mistral** qui devra finir par être completed (il faut attendre).
+
+---
 
 ### RAG API
 #### Image Docker
@@ -60,6 +67,8 @@ sudo kubectl get pods
 
 On doit trouver un service **redis-rag-api** et le pods **redis-rag-api** en running.
 
+---
+
 ### RAG UI
 #### Image Docker
 ```bash
@@ -77,6 +86,8 @@ sudo kubectl get pods
 ```
 
 On doit trouver un service redis-rag-ui et le pods redis-rag-ui en running.
+
+---
 
 ### Port-forwarding
 Les commandes suivantes ont pour objectif de rendre visibles les pods en dehors du cluster. (NodePort)
