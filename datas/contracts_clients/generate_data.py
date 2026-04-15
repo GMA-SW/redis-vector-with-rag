@@ -2,36 +2,75 @@ import json
 import random
 from faker import Faker
 
-fake = Faker()
 
-NB_CLIENTS = 1000000
+# =========================================================
+# CONFIGURATION
+# =========================================================
+NB_CLIENTS = 1_000_000
+
 OUTPUT_CLIENTS = "clients.jsonl"
 OUTPUT_CONTRACTS = "contracts.jsonl"
 
-contract_types = ["assurance_vie", "credit", "epargne", "auto"]
+SEGMENTS = ["standard", "premium", "vip"]
+CONTRACT_TYPES = ["assurance_vie", "credit", "epargne", "auto"]
+CONTRACT_STATUS = ["actif", "clos"]
 
-with open(OUTPUT_CLIENTS, "w") as fc, open(OUTPUT_CONTRACTS, "w") as fct:
-    for i in range(NB_CLIENTS):
-        client_id = f"C{i}"
+MIN_CONTRACTS = 1
+MAX_CONTRACTS = 3
 
-        client = {
-            "client_id": client_id,
-            "name": fake.name(),
-            "age": random.randint(18, 80),
-            "city": fake.city(),
-            "segment": random.choice(["standard", "premium", "vip"])
-        }
 
-        fc.write(json.dumps(client) + "\n")
+# =========================================================
+# INIT
+# =========================================================
+fake = Faker()
 
-        # 1 à 3 contrats
-        for j in range(random.randint(1, 3)):
-            contract = {
-                "contract_id": f"CTR_{i}_{j}",
-                "client_id": client_id,
-                "type": random.choice(contract_types),
-                "amount": random.randint(1000, 200000),
-                "status": random.choice(["actif", "clos"])
-            }
 
-            fct.write(json.dumps(contract) + "\n")
+# =========================================================
+# DATA GENERATION
+# =========================================================
+def generate_client(client_id):
+    return {
+        "client_id": client_id,
+        "name": fake.name(),
+        "age": random.randint(18, 80),
+        "city": fake.city(),
+        "segment": random.choice(SEGMENTS)
+    }
+
+
+def generate_contract(client_id, client_index, contract_index):
+    return {
+        "contract_id": f"CTR_{client_index}_{contract_index}",
+        "client_id": client_id,
+        "type": random.choice(CONTRACT_TYPES),
+        "amount": random.randint(1000, 200000),
+        "status": random.choice(CONTRACT_STATUS)
+    }
+
+
+# =========================================================
+# MAIN GENERATION LOOP
+# =========================================================
+def generate_data():
+    with open(OUTPUT_CLIENTS, "w") as fc, open(OUTPUT_CONTRACTS, "w") as fct:
+
+        for i in range(NB_CLIENTS):
+            client_id = f"C{i}"
+
+            # ---- client ----
+            client = generate_client(client_id)
+            fc.write(json.dumps(client) + "\n")
+
+            # ---- contracts ----
+            nb_contracts = random.randint(MIN_CONTRACTS, MAX_CONTRACTS)
+
+            for j in range(nb_contracts):
+                contract = generate_contract(client_id, i, j)
+                fct.write(json.dumps(contract) + "\n")
+
+
+# =========================================================
+# ENTRYPOINT
+# =========================================================
+if __name__ == "__main__":
+    generate_data()

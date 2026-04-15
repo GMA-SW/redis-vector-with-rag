@@ -1,12 +1,19 @@
-import requests
-from new_search import search, get_clients_by_contract_type, get_client_by_name
 import time
+import re
+import requests
 
-start = time.time()
+from new_search import search, get_clients_by_contract_type, get_client_by_name
+
+
+# =========================================================
+# CONFIGURATION
+# =========================================================
 OLLAMA_URL = "http://localhost:11434/api/generate"
 
 
-# 🔍 Détection simple du type de contrat
+# =========================================================
+# DETECTION (intent / filtre / nom)
+# =========================================================
 def detect_filter(query):
     q = query.lower()
 
@@ -19,13 +26,15 @@ def detect_filter(query):
 
     return None
 
-import re
 
 def detect_name(query):
     match = re.search(r"[A-Z][a-z]+ [A-Z][a-z]+", query)
     return match.group(0) if match else None
 
-# 🤖 Appel LLM
+
+# =========================================================
+# LLM
+# =========================================================
 def ask_llm(prompt):
     try:
         res = requests.post(OLLAMA_URL, json={
@@ -45,6 +54,10 @@ def ask_llm(prompt):
         print("Erreur appel LLM:", e)
         return "Erreur technique"
 
+
+# =========================================================
+# REDIS RESULT PARSING
+# =========================================================
 def parse_results(results):
     contexts = []
 
@@ -65,54 +78,12 @@ def parse_results(results):
 
     return contexts
 
-def rag(query):
-    contract_type = detect_filter(query)
-    name = detect_name(query)
 
-    print("Detected filter:", contract_type)
-    print("Detected name:", name)
-
-    # 🔥 1. CAS STRUCTURÉ (meilleur perf)
-    if "quels clients" in query.lower() and contract_type:
-        clients = get_clients_by_contract_type(contract_type)
-
-        if not clients:
-            return "Aucun client trouvé."
-
-        return "Clients trouvés : " + ", ".join(clients)
-
-    # 🔥 2. CAS NOM → TEXT SEARCH (CRUCIAL)
-    if name:
-        print("Detected name:", name)
-
-        client = get_client_by_name(name)
-
-        if client:
-            return client["content"]
-
-        return "Client non trouvé."
-
-    # 🔥 3. RAG classique
-    filters = {}
-    if contract_type:
-        filters["contract_type"] = contract_type
-
-    results = search(query, k=10, filters=filters)
-
-    contexts = parse_results(results)
-
-    if not contexts:
-        return "Je ne trouve pas l'information dans les données."
-
-    # 🔥 IMPORTANT → limiter contexte
-    contexts = contexts[:5]
-
-    context_text = "\n".join(contexts)
-
-    print("\n--- CONTEXT ---")
-    print(context_text[:500])
-
-    prompt = f"""
+# =========================================================
+# PROMPT BUILDER
+# =========================================================
+def build_prompt(context_text, query):
+    return f"""
 Tu es un système d'extraction de données.
 
 Tu dois répondre UNIQUEMENT avec les informations présentes dans le contexte.
@@ -131,11 +102,70 @@ Question:
 Réponse:
 """
 
+
+# =========================================================
+# RAG PIPELINE
+# =========================================================
+def rag(query):
+    contract_type = detect_filter(query)
+    name = detect_name(query)
+
+    print("Detected filter:", contract_type)
+    print("Detected name:", name)
+
+    # -----------------------------------------------------
+    # 1. CAS STRUCTURÉ (requête directe Redis)
+    # -----------------------------------------------------
+    if "quels clients" in query.lower() and contract_type:
+        clients = get_clients_by_contract_type(contract_type)
+
+        if not clients:
+            return "Aucun client trouvé."
+
+        return "Clients trouvés : " + ", ".join(clients)
+
+    # -----------------------------------------------------
+    # 2. CAS NOM (lookup direct)
+    # -----------------------------------------------------
+    if name:
+        client = get_client_by_name(name)
+
+        if client:
+            return client["content"]
+
+        return "Client non trouvé."
+
+    # -----------------------------------------------------
+    # 3. RAG CLASSIQUE (vector search)
+    # -----------------------------------------------------
+    filters = {}
+    if contract_type:
+        filters["contract_type"] = contract_type
+
+    results = search(query, k=10, filters=filters)
+    contexts = parse_results(results)
+
+    if not contexts:
+        return "Je ne trouve pas l'information dans les données."
+
+    # 🔥 limitation contexte (important pour LLM)
+    contexts = contexts[:5]
+    context_text = "\n".join(contexts)
+
+    print("\n--- CONTEXT ---")
+    print(context_text[:500])
+
+    prompt = build_prompt(context_text, query)
+
     return ask_llm(prompt)
 
 
-# 🔥 TEST
+# =========================================================
+# MAIN (TEST)
+# =========================================================
 if __name__ == "__main__":
+    start = time.time()
+
     print(rag("Quelle est la moyenne des montants assurés pour les clients de Paris ?"))
 
     end = time.time()
