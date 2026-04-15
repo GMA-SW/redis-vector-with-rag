@@ -98,3 +98,4 @@ sudo kubectl port-forward svc/redis-rag-ui 8501:8501
 #### Agent IA
 ```bash
 sudo kubectl port-forward svc/ollama 11434:11434
+```
