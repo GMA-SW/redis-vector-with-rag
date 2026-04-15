@@ -8,5 +8,7 @@ title: Accueil
 ## Environment setup
 - [Cluster K8S](kubernetes.md)
 - [Redis Vector Database](redis.md)
+- [Optimizations & Performance](optimizations.md)
+- [Limitations & Améliorations](limitations.md)
 
 ## Guidelines

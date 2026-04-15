@@ -1,6 +1,7 @@
-theme: minima
+theme: tactile
 
 header_pages:
   - index.md
   - kubernetes.md
   - redis.md
+  - optimizations.md
