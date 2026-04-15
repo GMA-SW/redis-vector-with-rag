@@ -1,11 +1,11 @@
 ---
 layout: default
-title: Redis
+title: Redis CLI
 ---
 
-# Redis Vector Database
+# Redis CLI
 
-## Accès à redis-cli
+## Accès au container Redis
 ```bash
 sudo kubectl get pods
 ```
