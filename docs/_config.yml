@@ -1,4 +1,4 @@
-theme: tactile
+theme: minima
 
 header_pages:
   - index.md
