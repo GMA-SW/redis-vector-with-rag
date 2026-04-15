@@ -47,9 +47,10 @@ Technologies :
 ## Environment setup
 - [Cluster K8S](kubernetes.md)
 - [Environnement python](python.md)
+- [Redis CLI](redis-cli.md)
 
 ## Guidelines
-- [Redis Vector Database](redis.md)
+- [Project setup](project-setup.md)
 
 ## Optimizations & Limitations
 - [Optimizations & Performance](optimizations.md)
