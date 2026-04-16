@@ -8,7 +8,7 @@ title: Project setup
 Générer les datasets clients et contrats :
 
 ```bash
-python data/generate_data.py
+python datas/contracts_clients/generate_data.py
 ```
 
 Fichiers générés :
@@ -23,7 +23,7 @@ Fichiers générés :
 Lancer l’ingestion :
 
 ```bash
-python ingest/ingest.py
+python datas/contracts_clients/ingest.py
 ```
 Vérifications :
 
@@ -43,6 +43,11 @@ FT.INFO idx:docs
 ## Index
 
 ### Création
+
+Permet de rechercher des informations similaires :
+```bash
+python datas/contracts_clients/index.py
+```
 
 ```sql
 FT.CREATE idx:docs
@@ -70,7 +75,7 @@ EF_CONSTRUCTION 200
 
 Permet de rechercher des informations similaires :
 ```bash
-python search/search.py
+python poc-rag/search.py
 ```
 
 ---
@@ -87,7 +92,7 @@ FT.SEARCH idx:docs "@contract_types:{assurance_vie}"
 
 Lancer le script :
 ```bash
-python rag/rag.py
+python poc-rag/rag.py
 ```
 
 ---
