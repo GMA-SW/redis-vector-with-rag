@@ -40,6 +40,30 @@ FT.INFO idx:docs
 
 ---
 
+## Index
+
+### Création
+
+```sql
+FT.CREATE idx:docs
+ON HASH
+PREFIX 1 "doc:"
+SCHEMA
+content TEXT
+name TEXT
+client_id TEXT
+segment TAG
+contract_types TAG SEPARATOR "|"
+embedding VECTOR HNSW 6
+TYPE FLOAT32
+DIM 384
+DISTANCE_METRIC COSINE
+M 16
+EF_CONSTRUCTION 200
+```
+
+---
+
 ## Recherche de données
 
 ### Recherche vectorielle
