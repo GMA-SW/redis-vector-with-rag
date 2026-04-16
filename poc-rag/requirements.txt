@@ -1,7 +1,0 @@
-redis
-faker
-numpy
-sentence_transformers
-tqdm
-requests
-orjson

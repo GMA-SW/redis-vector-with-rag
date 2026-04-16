@@ -1,6 +1,0 @@
-fastapi
-uvicorn
-redis
-numpy
-requests
-sentence-transformers
